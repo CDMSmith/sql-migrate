@@ -112,7 +112,7 @@ See [here](https://github.com/go-sql-driver/mysql#parsetime) for more informatio
 Import sql-migrate into your application:
 
 ```go
-import "github.com/rubenv/sql-migrate"
+import "github.com/CDMSmith/sql-migrate"
 ```
 
 Set up a source of migrations, this can be from memory, from a set of files or from bindata (more on that later):

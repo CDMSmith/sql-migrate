@@ -8,12 +8,13 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/rubenv/sql-migrate"
+	"github.com/CDMSmith/sql-migrate"
 	"gopkg.in/gorp.v1"
 	"gopkg.in/yaml.v2"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-oci8"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -21,6 +22,7 @@ var dialects = map[string]gorp.Dialect{
 	"sqlite3":  gorp.SqliteDialect{},
 	"postgres": gorp.PostgresDialect{},
 	"mysql":    gorp.MySQLDialect{Engine: "InnoDB", Encoding: "UTF8"},
+	"oci8":     gorp.OracleDialect{},
 }
 
 var ConfigFile string
