@@ -525,10 +525,37 @@ Check https://github.com/go-sql-driver/mysql#parsetime for more info.`)
 
 	// Create migration database map
 	dbMap := &gorp.DbMap{Db: db, Dialect: d}
-	dbMap.AddTableWithNameAndSchema(MigrationRecord{}, schemaName, tableName).SetKeys(false, "Id")
+	tblMap := dbMap.AddTableWithNameAndSchema(MigrationRecord{}, schemaName, tableName)
+	idCol := "Id"
+	tblMap.SetKeys(false, idCol)
+
+	var err error
+
+	// When using the oci8 driver, bypass dbMap.CreateTablesIfNotExists because it generates invalid PL/SQL.
+	if dialect == "oci8" {
+		sql := fmt.Sprintf(`BEGIN
+EXECUTE IMMEDIATE 'CREATE TABLE %[1]s(
+	%[2]s VARCHAR(300),
+	APPLIED_AT TIMESTAMP WITH TIME ZONE,
+	CONSTRAINT %[3]s_PK PRIMARY KEY (%[2]s)
+)';
+
+EXCEPTION
+	WHEN OTHERS THEN
+		IF SQLCODE = -955 THEN
+			NULL; -- supress error if table already exists
+		ELSE
+			RAISE;
+		END IF;
+END;`, d.QuotedTableForQuery(strings.ToUpper(schemaName), strings.ToUpper(tableName)), d.QuoteField(strings.ToUpper(idCol)), strings.ToUpper(tableName))
+
+		_, err = db.Exec(sql)
+	} else {
+		err = dbMap.CreateTablesIfNotExists()
+	}
+
 	//dbMap.TraceOn("", log.New(os.Stdout, "migrate: ", log.Lmicroseconds))
 
-	err := dbMap.CreateTablesIfNotExists()
 	if err != nil {
 		return nil, err
 	}
