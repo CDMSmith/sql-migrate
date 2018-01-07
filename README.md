@@ -55,7 +55,7 @@ production:
     table: migrations
 ```
 
-The `table` setting is optional and will default to `gorp_migrations`.
+The `table` setting is optional and will default to `migrations`.
 
 The environment that will be used can be specified with the `-env` flag (defaults to `development`).
 

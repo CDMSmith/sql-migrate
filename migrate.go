@@ -25,7 +25,7 @@ const (
 	Down
 )
 
-var tableName = "gorp_migrations"
+var tableName = "migrations"
 var schemaName = ""
 var numberPrefixRegex = regexp.MustCompile(`^(\d+).*$`)
 
