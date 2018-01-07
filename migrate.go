@@ -547,7 +547,7 @@ EXCEPTION
 		ELSE
 			RAISE;
 		END IF;
-END;`, d.QuotedTableForQuery(strings.ToUpper(schemaName), strings.ToUpper(tableName)), d.QuoteField(strings.ToUpper(idCol)), strings.ToUpper(tableName))
+END;`, d.QuotedTableForQuery(schemaName, tableName), d.QuoteField(idCol), strings.ToUpper(tableName))
 
 		_, err = db.Exec(sql)
 	} else {
